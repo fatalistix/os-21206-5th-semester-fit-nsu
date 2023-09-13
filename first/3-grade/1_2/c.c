@@ -15,7 +15,7 @@
 void *thread_function(void *args) {
   // char *str = "Hello world";
   char *str = (char *)malloc(13);
-  strcmp(str, "hello, world");
+  strcpy(str, "hello, world");
   return str;
 }
 
