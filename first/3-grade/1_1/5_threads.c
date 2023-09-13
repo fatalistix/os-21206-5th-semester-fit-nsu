@@ -32,7 +32,11 @@ int main() {
   }
 
   for (int i = 0; i < NUM_THREADS; ++i) {
-    pthread_join(tids[i], NULL);
+    err = pthread_join(tids[i], NULL);
+    if (err) {
+      perror("main: pthread joining error");
+      return -1;
+    }
   }
 
   return 0;
