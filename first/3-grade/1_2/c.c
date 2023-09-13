@@ -2,6 +2,7 @@
  * Copyright (c) 2023, Balashov Vyacheslav
  */
 
+#include <string.h>
 #define _GNU_SOURCE
 
 #include <error.h>
@@ -12,7 +13,9 @@
 #include <unistd.h>
 
 void *thread_function(void *args) {
-  char *str = "Hello world";
+  // char *str = "Hello world";
+  char *str = (char *)malloc(13);
+  strcmp(str, "hello, world");
   return str;
 }
 
@@ -27,6 +30,7 @@ int main() {
     return -1;
   }
 
+  printf("12345\n");
   err = pthread_join(tid, (void **)&str);
   if (err) {
     perror("main: error creating pthread");
@@ -34,6 +38,7 @@ int main() {
   }
 
   printf("main: %s\n", str);
+  free(str);
 
   return 0;
 }
