@@ -5,6 +5,7 @@
 #include <errno.h>
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -12,7 +13,7 @@
 void *mythread(void *arg) {
   printf("mythread [%d %d %d]: Hello from mythread!\n", getpid(), getppid(),
          gettid());
-  return NULL;
+  exit(0);
 }
 
 int main() {
@@ -33,6 +34,8 @@ int main() {
     perror("main: pthread joining error");
     return -1;
   }
+
+  printf("12345\n");
 
   return 0;
 }
