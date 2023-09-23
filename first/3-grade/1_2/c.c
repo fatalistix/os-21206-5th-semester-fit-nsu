@@ -2,13 +2,13 @@
  * Copyright (c) 2023, Balashov Vyacheslav
  */
 
-#include <string.h>
 #define _GNU_SOURCE
 
 #include <error.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
 

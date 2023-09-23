@@ -2,9 +2,9 @@
  * Copyright (c) 2023, Balashov Vyacheslav
  */
 
-#include <asm-generic/errno-base.h>
 #define _GNU_SOURCE
 
+#include <asm-generic/errno-base.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
