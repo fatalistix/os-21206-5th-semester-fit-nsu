@@ -2,7 +2,6 @@
  * Copyright (c) 2023, Balashov Vyacheslav
  */
 
-#include <asm-generic/errno-base.h>
 #define _GNU_SOURCE
 
 #include <pthread.h>
@@ -48,7 +47,7 @@ int main() {
   err = pthread_join(tid, (void **)&resultPtr);
   printf("main: err = %d, EINVAL = %d, result = %d, resultPtr = %p, "
          "PTHREAD_CANCELED = %p\n",
-         err, EINVAL, result, resultPtr, PTHREAD_CANCELED);
+         err, 0, result, resultPtr, PTHREAD_CANCELED);
 
   return 0;
 }
