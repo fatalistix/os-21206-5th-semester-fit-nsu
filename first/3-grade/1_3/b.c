@@ -82,7 +82,7 @@ int main() {
 
   printf("main: attr set\n");
 
-  err = pthread_create(&tid, NULL, thread_foo_main, &s);
+  err = pthread_create(&tid, &attr, thread_foo_main, &s);
   if (err) {
     perror("main: error during thread creation");
     return -1;
@@ -92,7 +92,7 @@ int main() {
 
   sleep(2);
 
-  err = pthread_create(&tid, NULL, thread_foo_global, NULL);
+  err = pthread_create(&tid, &attr, thread_foo_global, NULL);
   if (err) {
     perror("main: error during thread creation");
     return -1;
@@ -102,7 +102,7 @@ int main() {
 
   sleep(2);
 
-  err = pthread_create(&tid, NULL, thread_foo_static, &ss);
+  err = pthread_create(&tid, &attr, thread_foo_static, &ss);
   if (err) {
     perror("main: error during thread creation");
     return -1;
@@ -112,7 +112,7 @@ int main() {
 
   sleep(2);
 
-  err = pthread_create(&tid, NULL, thread_foo_heap, hs);
+  err = pthread_create(&tid, &attr, thread_foo_heap, hs);
   if (err) {
     perror("main: error during thread creation");
     return -1;
