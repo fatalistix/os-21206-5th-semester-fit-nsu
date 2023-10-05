@@ -11,11 +11,13 @@
 #include <sys/types.h>
 
 void sigint_handler(int arg) {
+  printf("handler: %lu\n", pthread_self());
   printf("SIGINT HANDLER: got sigint (%d),  %d\n", SIGINT, arg);
 }
 
 void *thread_foo_sigint(void *args) {
   // int err;
+  printf("thread 1: %lu\n", pthread_self());
   signal(SIGINT, sigint_handler);
   if (errno) {
     perror("thread 1: error setting sigint handler");
@@ -30,6 +32,7 @@ void *thread_foo_sigint(void *args) {
 }
 
 void *thread_foo_sigquit(void *args) {
+  printf("thread 2: %lu\n", pthread_self());
   int err;
   sigset_t set;
   int signal_code;
@@ -61,6 +64,7 @@ void *thread_foo_sigquit(void *args) {
 }
 
 void *thread_foo_immortal(void *args) {
+  printf("thread 3: %lu\n", pthread_self());
   int err;
   sigset_t mask;
 
@@ -76,12 +80,14 @@ void *thread_foo_immortal(void *args) {
     return NULL;
   }
 
-  sleep(7);
+  sleep(17);
   printf("thread 3: I AM ALIVE\n");
   return NULL;
 }
 
 int main() {
+  // signal(SIGINT, sigint_handler);
+  printf("thread main: %lu\n", pthread_self());
   pthread_t tid1;
   pthread_t tid2;
   pthread_t tid3;
@@ -93,6 +99,7 @@ int main() {
     return -1;
   }
   printf("main: thread sigint started\n");
+  sleep(1);
 
   err = pthread_create(&tid2, NULL, thread_foo_sigquit, NULL);
   if (err) {
@@ -100,6 +107,7 @@ int main() {
     return -1;
   }
   printf("main: thread sigquit started\n");
+  sleep(1);
 
   err = pthread_create(&tid3, NULL, thread_foo_immortal, NULL);
   if (err) {
@@ -107,8 +115,9 @@ int main() {
     return -1;
   }
   printf("main: thread immortal started\n");
+  sleep(1);
 
-  sleep(15);
+  sleep(10);
 
   err = pthread_kill(tid1, SIGINT);
   if (err) {
@@ -129,6 +138,24 @@ int main() {
     perror("main: error killing thread");
     return -1;
   }
+  printf("main: immortal to sigsegv sent\n");
+
+  // err = pthread_join(tid1, NULL);
+  // if (err) {
+  //   perror("main: error joining thread 1");
+  //   return -1;
+  // }
+  err = pthread_join(tid2, NULL);
+  if (err) {
+    perror("main: error joining thread 2");
+    return -1;
+  }
+  err = pthread_join(tid3, NULL);
+  if (err) {
+    perror("main: error joining thread 3");
+    return -1;
+  }
+
   printf("main: sigsegv to immortal sent\n");
 
   sleep(5);
