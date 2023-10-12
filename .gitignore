@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-# executables
-bin
-=======
 bin
 .idea
 .vscode
-
->>>>>>> 26ac0f3 (loaded .gitignore)
+cmake-build-debug
