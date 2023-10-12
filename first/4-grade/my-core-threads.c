@@ -98,7 +98,7 @@ static void *create_stack(off_t size) {
 
 void sigcancelhandler(int signal, siginfo_t *info, void *context) {
   //    setcontext((ucontext_t*) context);
-  kill(getpid(), SIGTERM);
+  tgkill(getpid(), gettid(), SIGCANCEL);
   // printf("i am here\n");
 }
 
