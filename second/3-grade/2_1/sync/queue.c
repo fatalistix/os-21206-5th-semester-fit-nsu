@@ -11,7 +11,7 @@ void *qmonitor(void *arg) {
 
   while (1) {
     queue_print_stats(q);
-    sleep(1);
+    usleep(10000);
   }
 
   return NULL;
