@@ -26,54 +26,35 @@ static long futex_wake(uint32_t *futx, uint32_t num_to_wake) {
   return futex(futx, FUTEX_WAKE, num_to_wake, NULL, NULL, 0);
 }
 
-enum { UNLOKED, LOCKED_NO_WAITERS, LOCKED_WITH_WAITERS };
+enum { UNLOCKED, LOCKED_NO_WAITERS, LOCKED_WITH_WAITERS };
 
 int my_mutex_init(my_mutex_t *m) {
-  *m = UNLOKED;
+  *m = UNLOCKED;
   return 0;
 }
-
-// int my_mutex_lock(my_mutex_t *m) {
-//   int c;
-//   uint32_t zero;
-//   long err;
-//   if ((c = atomic_compare_exchange_strong(m, &zero, 1)) != 0) {
-//     if (c != 2) {
-//       c = atomic_exchange(m, 2);
-//     }
-//     while (c != 0) {
-//       err = futex_wait(m, 2);
-//       if (err == -1 && errno != EAGAIN) {
-//         return err;
-//       }
-//       c = atomic_exchange(m, 2);
-//     }
-//   }
-//   return 0;
-// }
 
 int my_mutex_lock(my_mutex_t *m) {
   int c;
   long err;
-  uint32_t zero = 0;
-  if (!AO_int_compare_and_swap(m, zero, 1)) {
-    if (c != 2) {
-      c = atomic_exchange(m, 2);
+  if ((c = __sync_val_compare_and_swap(m, UNLOCKED, LOCKED_NO_WAITERS) !=
+           UNLOCKED)) {
+    if (c == LOCKED_NO_WAITERS) {
+      c = atomic_exchange(m, LOCKED_WITH_WAITERS);
     }
-    while (c != 0) {
-      err = futex_wait(m, 2);
+    while (c != UNLOCKED) {
+      err = futex_wait(m, LOCKED_WITH_WAITERS);
       if (err == -1 && errno != EAGAIN) {
         return err;
       }
-      c = atomic_exchange(m, 2);
+      c = atomic_exchange(m, LOCKED_WITH_WAITERS);
     }
   }
   return 0;
 }
 
 int my_mutex_unlock(my_mutex_t *m) {
-  if (atomic_fetch_sub(m, 1) != 1) {
-    *m = 0;
+  if (atomic_fetch_sub(m, 1) != LOCKED_NO_WAITERS) {
+    atomic_exchange(m, UNLOCKED);
     futex_wake(m, 1);
   }
   return 0;
