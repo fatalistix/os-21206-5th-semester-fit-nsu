@@ -3,3 +3,4 @@ bin
 .vscode
 cmake-build-debug
 CMakeFiles
+build
