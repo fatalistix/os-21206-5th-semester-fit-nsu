@@ -1,3 +1,0 @@
-/home/vyacheslav/Documents/Programming/Study/OS-21206-5th-Semester-FIT-NSU/first/5-grade/CMakeFiles/main.dir
-/home/vyacheslav/Documents/Programming/Study/OS-21206-5th-Semester-FIT-NSU/first/5-grade/CMakeFiles/edit_cache.dir
-/home/vyacheslav/Documents/Programming/Study/OS-21206-5th-Semester-FIT-NSU/first/5-grade/CMakeFiles/rebuild_cache.dir
